@@ -53,3 +53,8 @@ dkms.conf
 
 # Demo files
 *.png
+.*jpg
+*.jpeg
+*.raw
+*.dng
+*.tiff
