@@ -15,6 +15,19 @@ unsigned long read_num(FILE * image) {
     return strtoul(buff, NULL, 10);
 }
 
+unsigned long image_width(FILE * image) {
+    fseek(image, 3, SEEK_SET);
+    unsigned long width = read_num(image);
+    return width;
+}
+
+unsigned long image_height(FILE * image) {
+    fseek(image, 3, SEEK_SET);
+    unsigned long width = read_num(image);
+    unsigned long height = read_num(image);
+    return height;
+}
+
 Pixel ** extract_image(FILE * image) {
     /*
     .ppm file structure:
