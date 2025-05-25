@@ -103,11 +103,8 @@ void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     }
 }
 
-QuadtreeNode * build_quadtree(Pixel ** pixel) {
-    FILE * image = fopen("paint.ppm", "r");
-    Pixel ** pixels = extract_image(image);
-    QuadtreeNode * quadtree = init_node(pixels, 0, image_width(image) - 1, image_height(image) - 1, 0);
-    fclose(image);
+QuadtreeNode * build_quadtree(Pixel ** pixels, unsigned long width, unsigned long height) {
+    QuadtreeNode * quadtree = init_node(pixels, 0, width - 1, height - 1, 0);
     image_detail(pixels, &quadtree);
     return quadtree;
 }
