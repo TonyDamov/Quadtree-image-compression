@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "quadtree.h"
-#include "readimage.c"
+#include "image.c"
 
 //Exagarated for the purpose of testing
 #define COLOR_DIFF_TRESHOLD 384
@@ -103,11 +103,13 @@ void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     }
 }
 
-
-void main() {
+QuadtreeNode * build_quadtree(Pixel ** pixel) {
     FILE * image = fopen("paint.ppm", "r");
     Pixel ** pixels = extract_image(image);
     QuadtreeNode * quadtree = init_node(pixels, 0, image_width(image) - 1, image_height(image) - 1, 0);
     fclose(image);
     image_detail(pixels, &quadtree);
+    return quadtree;
+}
+
 } 

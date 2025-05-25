@@ -63,3 +63,4 @@ Pixel ** extract_image(FILE * image) {
     }
     return pixels;
 }
+
