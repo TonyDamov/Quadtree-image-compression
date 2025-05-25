@@ -138,4 +138,25 @@ Pixel ** destruct_tree(QuadtreeNode ** quadtree) {
 
     return pixels;
 }
+
+void release_quadtree_helper(QuadtreeNode ** quadtree){
+    if((*quadtree)->state == LEAF) {
+        return;
+    }
+    else {
+        release_quadtree_helper(&(*quadtree)->data.child[0]);
+        free((*quadtree)->data.child[0]);
+        release_quadtree_helper(&(*quadtree)->data.child[1]);
+        free((*quadtree)->data.child[1]);
+        release_quadtree_helper(&(*quadtree)->data.child[2]);
+        free((*quadtree)->data.child[2]);
+        release_quadtree_helper(&(*quadtree)->data.child[3]);
+        free((*quadtree)->data.child[3]);
+    }
+}
+
+void release_quadtree(QuadtreeNode ** quadtree) {
+    release_quadtree_helper(quadtree);
+    free(*quadtree);
+}
 } 

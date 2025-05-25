@@ -37,5 +37,7 @@ void split_tree(Pixel ** pixels , QuadtreeNode ** quadtree);
 QuadtreeNode * build_quadtree(Pixel ** pixels, unsigned long width, unsigned long height);
 void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels);
 Pixel ** destruct_tree(QuadtreeNode ** quadtree);
+void release_quadtree_helper(QuadtreeNode ** quadtree);
+void release_quadtree(QuadtreeNode ** quadtree);
 
 #endif
