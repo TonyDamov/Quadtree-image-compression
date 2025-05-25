@@ -4,7 +4,7 @@
 #include "quadtree.h"
 // Working with .ppm files since its contents as easiest to read
 //.ppm saves the width and height of the image as a string which represents a number 
-unsigned long read_num(FILE * image) {
+long long read_num(FILE * image) {
     char buff[8];
     int i = 0;
     do {
@@ -12,19 +12,19 @@ unsigned long read_num(FILE * image) {
         i++;
     } while(buff[i-1] != 10 && buff[i-1] != 32 && i < sizeof(buff));
     buff[i-1] = '\0';
-    return strtoul(buff, NULL, 10);
+    return strtoll(buff, NULL, 10);
 }
 
-unsigned long image_width(FILE * image) {
+long long image_width(FILE * image) {
     fseek(image, 3, SEEK_SET);
-    unsigned long width = read_num(image);
+    long long width = read_num(image);
     return width;
 }
 
-unsigned long image_height(FILE * image) {
+long long image_height(FILE * image) {
     fseek(image, 3, SEEK_SET);
-    unsigned long width = read_num(image);
-    unsigned long height = read_num(image);
+    long long width = read_num(image);
+    long long height = read_num(image);
     return height;
 }
 
@@ -38,9 +38,9 @@ Pixel ** extract_image(FILE * image) {
     */
     //Skip the beginning of the ppm file which holds the tag P6
     fseek(image, 3, SEEK_SET);
-    unsigned long width = read_num(image);
-    unsigned long height = read_num(image);
-    unsigned long maxval = read_num(image);
+    long long width = read_num(image);
+    long long height = read_num(image);
+    long long maxval = read_num(image);
 
     Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
     if(pixels == NULL) {

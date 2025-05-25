@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "image.h"
 #include "quadtree.h"
-#include "image.c"
 
 //Exagarated for the purpose of testing
 #define COLOR_DIFF_TRESHOLD 384

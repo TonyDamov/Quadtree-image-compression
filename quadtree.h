@@ -1,12 +1,6 @@
 #ifndef QUADTREE_H
 #define QUADTREE_H
-
-typedef struct pixel {
-    unsigned char R;
-    unsigned char G;
-    unsigned char B;
-} Pixel;
-
+#include "image.h"
 
 typedef enum treestates {
     BRANCH,
