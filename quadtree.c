@@ -109,4 +109,33 @@ QuadtreeNode * build_quadtree(Pixel ** pixels, unsigned long width, unsigned lon
     return quadtree;
 }
 
+void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
+    if((*quadtree)->state == LEAF) {
+        for(int i = (*quadtree)->py; i <= (*quadtree)->ny; i++) {
+            for(int j = (*quadtree)->nx; j <= (*quadtree)->px; j++) {
+                pixels[i][j].R = (*quadtree)->data.pixel.R;
+                pixels[i][j].G = (*quadtree)->data.pixel.G;
+                pixels[i][j].B = (*quadtree)->data.pixel.B;
+            }
+        }
+    }
+    else {
+        destruct_tree_helper(&(*quadtree)->data.child[0], pixels);
+        destruct_tree_helper(&(*quadtree)->data.child[1], pixels);
+        destruct_tree_helper(&(*quadtree)->data.child[2], pixels);
+        destruct_tree_helper(&(*quadtree)->data.child[3], pixels);
+    }
+}
+
+Pixel ** destruct_tree(QuadtreeNode ** quadtree) {
+    long long width = (*quadtree)->px + 1, height = (*quadtree)->ny + 1;
+    Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
+    for(int i = 0; i < height; i++) {
+        pixels[i] = (Pixel*)malloc(sizeof(Pixel) * width);
+    }
+    
+    destruct_tree_helper(quadtree, pixels);
+
+    return pixels;
+}
 } 
