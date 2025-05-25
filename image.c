@@ -28,7 +28,7 @@ long long image_height(FILE * image) {
     return height;
 }
 
-Pixel ** extract_image(FILE * image) {
+Pixel ** import_image(FILE * image) {
     /*
     .ppm file structure:
     P6
@@ -63,4 +63,10 @@ Pixel ** extract_image(FILE * image) {
     }
     return pixels;
 }
+
+void export_image(FILE * image, Pixel ** pixels) {
+
+}
+
+
 

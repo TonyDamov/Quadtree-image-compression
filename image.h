@@ -9,9 +9,10 @@ typedef struct pixel {
     unsigned char B;
 } Pixel;
 
-unsigned long read_num(FILE * image);
-unsigned long image_width(FILE * image);
-unsigned long image_height(FILE * image);
-Pixel ** extract_image(FILE * image);
+long long read_num(FILE * image);
+long long image_width(FILE * image);
+long long image_height(FILE * image);
+Pixel ** import_image(FILE * image);
+void export_image(FILE * image, Pixel ** pixels);
 
 #endif
