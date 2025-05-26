@@ -13,6 +13,6 @@ long long read_num(FILE * image);
 long long image_width(FILE * image);
 long long image_height(FILE * image);
 Pixel ** import_image(FILE * image);
-void export_image(FILE * image, Pixel ** pixels);
+void export_image(FILE * image, Pixel ** pixels, long long width, long long height);
 
 #endif

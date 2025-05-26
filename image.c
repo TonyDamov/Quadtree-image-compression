@@ -64,8 +64,22 @@ Pixel ** import_image(FILE * image) {
     return pixels;
 }
 
-void export_image(FILE * image, Pixel ** pixels) {
+void export_image(FILE * image, Pixel ** pixels, long long width, long long height) {
+    fputs("P6\n", image);
+    char widthstr[64];
+    char heightstr[64];
+    char maxvalstr[64];
+    snprintf(widthstr, 64, "%lld", width);
+    snprintf(heightstr, 64, "%lld", height);
+    snprintf(maxvalstr, 64, "%lld", 255);
 
+    fprintf(image, "%s %s\n%s\n", widthstr, heightstr, maxvalstr);
+
+    for(int i = 0; i < height; i++) {
+        for(int j = 0; j < width; j++) {
+            fprintf(image, "%c%c%c", pixels[i][j].R, pixels[i][j].G, pixels[i][j].B);
+        }
+    }
 }
 
 
