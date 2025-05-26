@@ -34,7 +34,7 @@ typedef struct quadtreenode {
 
 QuadtreeNode * init_node(Pixel ** pixels, long long nx, long long px, long long ny, long long py);
 void split_tree(Pixel ** pixels , QuadtreeNode ** quadtree);
-QuadtreeNode * build_quadtree(Pixel ** pixels, unsigned long width, unsigned long height);
+QuadtreeNode * build_quadtree(Pixel ** pixels, long long width, long long height);
 void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels);
 Pixel ** destruct_tree(QuadtreeNode ** quadtree);
 void release_quadtree_helper(QuadtreeNode ** quadtree);

@@ -84,7 +84,7 @@ int is_similar_color(Pixel ** pixels, Pixel meancolor, QuadtreeNode quadtree) {
     int is_similar_color = 1;
     for(int i = quadtree.py; i <= quadtree.ny && is_similar_color; i++) {
         for(int j = quadtree.nx; j <= quadtree.px && is_similar_color; j++) {
-            int difference = abs(meancolor.R - pixels[i][j].R) + abs(meancolor.G - pixels[i][j].G) + abs(meancolor.B - pixels[i][j].B);
+            double difference = abs(meancolor.R - pixels[i][j].R) + abs(meancolor.G - pixels[i][j].G) + abs(meancolor.B - pixels[i][j].B);
             if(difference > COLOR_DIFF_TRESHOLD) {
                 is_similar_color = 0;
             }
@@ -103,7 +103,7 @@ void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     }
 }
 
-QuadtreeNode * build_quadtree(Pixel ** pixels, unsigned long width, unsigned long height) {
+QuadtreeNode * build_quadtree(Pixel ** pixels, long long width, long long height) {
     QuadtreeNode * quadtree = init_node(pixels, 0, width - 1, height - 1, 0);
     image_detail(pixels, &quadtree);
     return quadtree;
@@ -130,8 +130,16 @@ void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
 Pixel ** destruct_tree(QuadtreeNode ** quadtree) {
     long long width = (*quadtree)->px + 1, height = (*quadtree)->ny + 1;
     Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
+    if(pixels == NULL) {
+        printf("\n\nError allocating memory.");
+        exit(1);
+    }
     for(int i = 0; i < height; i++) {
         pixels[i] = (Pixel*)malloc(sizeof(Pixel) * width);
+        if(pixels[i] == NULL) {
+            printf("\n\nError allocating memory.");
+            exit(1);
+        }
     }
     
     destruct_tree_helper(quadtree, pixels);
