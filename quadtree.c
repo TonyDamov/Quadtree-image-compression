@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "image.h"
 #include "quadtree.h"
 
 //Exagarated for the purpose of testing
@@ -11,7 +10,12 @@
 
 QuadtreeNode * init_node(Pixel ** pixels, long long nx, long long px, long long ny, long long py) {
     QuadtreeNode * newnode = (QuadtreeNode*)malloc(sizeof(QuadtreeNode));
+    ALLOC_ERROR(newnode)
     newnode->id = NODECOUNTER++;
+    if(NODECOUNTER < 0) {
+        printf("\nRan out of ids.");
+        exit(1);
+    }
     newnode->nx = nx;
     newnode->ny = ny;
     newnode->px = px;
@@ -103,13 +107,13 @@ void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     }
 }
 
-QuadtreeNode * build_quadtree(Pixel ** pixels, long long width, long long height) {
+QuadtreeNode * construct_quadtree(Pixel ** pixels, long long width, long long height) {
     QuadtreeNode * quadtree = init_node(pixels, 0, width - 1, height - 1, 0);
     image_detail(pixels, &quadtree);
     return quadtree;
 }
 
-void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
+void deconstruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
     if((*quadtree)->state == LEAF) {
         for(int i = (*quadtree)->py; i <= (*quadtree)->ny; i++) {
             for(int j = (*quadtree)->nx; j <= (*quadtree)->px; j++) {
@@ -127,23 +131,18 @@ void destruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
     }
 }
 
-Pixel ** destruct_tree(QuadtreeNode ** quadtree) {
+Pixel ** deconstruct_tree(QuadtreeNode ** quadtree) {
     long long width = (*quadtree)->px + 1, height = (*quadtree)->ny + 1;
     Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
-    if(pixels == NULL) {
-        printf("\n\nError allocating memory.");
-        exit(1);
-    }
+    ALLOC_ERROR(pixels)
     for(int i = 0; i < height; i++) {
         pixels[i] = (Pixel*)malloc(sizeof(Pixel) * width);
-        if(pixels[i] == NULL) {
-            printf("\n\nError allocating memory.");
-            exit(1);
-        }
+        ALLOC_ERROR(pixels[i])
     }
     
-    destruct_tree_helper(quadtree, pixels);
+    deconstruct_tree_helper(quadtree, pixels);
 
+    release_quadtree(quadtree);
     return pixels;
 }
 
@@ -167,4 +166,3 @@ void release_quadtree(QuadtreeNode ** quadtree) {
     release_quadtree_helper(quadtree);
     free(*quadtree);
 }
-} 
