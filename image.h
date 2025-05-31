@@ -1,7 +1,15 @@
 #ifndef IMAGE_H
 #define IMAGE_H
+
 #include <stdio.h>
 #include <stdlib.h>
+
+#define FOPEN_ERROR(FILE) { \
+    if(FILE == NULL) { \
+        printf("\nError opening file."); \
+        exit(1); \
+    } \
+} 
 
 typedef struct pixel {
     unsigned char R;
@@ -10,9 +18,9 @@ typedef struct pixel {
 } Pixel;
 
 long long read_num(FILE * image);
-long long image_width(FILE * image);
-long long image_height(FILE * image);
-Pixel ** import_image(FILE * image);
-void export_image(FILE * image, Pixel ** pixels, long long width, long long height);
+long long image_width(const char * filename);
+long long image_height(const char * filename);
+Pixel ** import_image(const char * filename);
+void export_image(const char * filename, Pixel ** pixels, long long width, long long height);
 
 #endif

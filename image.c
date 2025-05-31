@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "quadtree.h"
+#include "image.h"
+
+
 // Working with .ppm files since its contents as easiest to read
 //.ppm saves the width and height of the image as a string which represents a number 
 long long read_num(FILE * image) {
@@ -15,20 +17,28 @@ long long read_num(FILE * image) {
     return strtoll(buff, NULL, 10);
 }
 
-long long image_width(FILE * image) {
+long long image_width(const char * filename) {
+    FILE * image = fopen(filename, "rb");
+    FOPEN_ERROR(image)
     fseek(image, 3, SEEK_SET);
     long long width = read_num(image);
+    fclose(image);
     return width;
 }
 
-long long image_height(FILE * image) {
+long long image_height(const char * filename) {
+    FILE * image = fopen(filename, "rb");
+    FOPEN_ERROR(image)
     fseek(image, 3, SEEK_SET);
     long long width = read_num(image);
     long long height = read_num(image);
+    fclose(image);
     return height;
 }
 
-Pixel ** import_image(FILE * image) {
+Pixel ** import_image(const char * filename) {
+    FILE * image = fopen(filename, "rb");
+    FOPEN_ERROR(image)
     /*
     .ppm file structure:
     P6
@@ -61,10 +71,13 @@ Pixel ** import_image(FILE * image) {
             pixels[i][j].B = fgetc(image);
         }
     }
+    fclose(image);
     return pixels;
 }
 
-void export_image(FILE * image, Pixel ** pixels, long long width, long long height) {
+void export_image(const char * filename, Pixel ** pixels, long long width, long long height) {
+    FILE * image = fopen(filename, "wb");
+    FOPEN_ERROR(image)
     fputs("P6\n", image);
     char widthstr[64];
     char heightstr[64];
@@ -80,7 +93,7 @@ void export_image(FILE * image, Pixel ** pixels, long long width, long long heig
             fprintf(image, "%c%c%c", pixels[i][j].R, pixels[i][j].G, pixels[i][j].B);
         }
     }
+    fclose(image);
 }
-
 
 
