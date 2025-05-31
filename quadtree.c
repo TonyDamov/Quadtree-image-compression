@@ -4,7 +4,9 @@
 #include "quadtree.h"
 
 //Exagarated for the purpose of testing
-#define COLOR_DIFF_TRESHOLD 20
+#define COLOR_DIFF_TRESHOLD 40
+
+long long NODECOUNTER = 0;
 
 //Counting the pixels of the image from (left;top) = (0;0) to (right; bottom) = (width; height)
 

@@ -7,7 +7,7 @@ If TreeState is branch it means the next node is going down into a deeper level.
 #include <stdio.h>
 #include <stdlib.h>
 #include "quadtree.h"
-#include "image.h"
+#include "codec.h"
 
 
 void encode_helper(FILE * file, QuadtreeNode ** quadtree) {

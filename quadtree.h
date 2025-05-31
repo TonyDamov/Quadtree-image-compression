@@ -12,8 +12,6 @@
     } \
 }
 
-long long NODECOUNTER = 0;
-
 typedef enum treestates {
     LEAF,
     BRANCH
