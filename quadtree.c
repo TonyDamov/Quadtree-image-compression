@@ -4,7 +4,7 @@
 #include "quadtree.h"
 
 //Exagarated for the purpose of testing
-#define COLOR_DIFF_TRESHOLD 384
+#define COLOR_DIFF_TRESHOLD 20
 
 //Counting the pixels of the image from (left;top) = (0;0) to (right; bottom) = (width; height)
 
@@ -71,17 +71,22 @@ void split_tree(Pixel ** pixels , QuadtreeNode ** quadtree) {
 
     long long mwidth = floor(((*quadtree)->nx + (*quadtree)->px) / 2);
     long long mheight = floor(((*quadtree)->ny + (*quadtree)->py) / 2);
-    //top left
-    QuadtreeNode * newnode1 = init_node(pixels, (*quadtree)->nx, mwidth, mheight, (*quadtree)->py);
-    QuadtreeNode * newnode2 = init_node(pixels, mwidth + 1, (*quadtree)->px, mheight, (*quadtree)->py);
-    QuadtreeNode * newnode3 = init_node(pixels, mwidth + 1, (*quadtree)->px, (*quadtree)->ny, mheight + 1);
-    QuadtreeNode * newnode4 = init_node(pixels, (*quadtree)->nx, mwidth, (*quadtree)->ny, mheight + 1);
+    if((*quadtree)->nx < (*quadtree)->px && (*quadtree)->py < (*quadtree)->ny) {
 
-    (*quadtree)->state = BRANCH;
-    (*quadtree)->data.child[0] = newnode1;
-    (*quadtree)->data.child[1] = newnode2;
-    (*quadtree)->data.child[2] = newnode3;
-    (*quadtree)->data.child[3] = newnode4;
+        //top left
+        QuadtreeNode * newnode1 = init_node(pixels, (*quadtree)->nx, mwidth, mheight, (*quadtree)->py);
+        QuadtreeNode * newnode2 = init_node(pixels, mwidth + 1, (*quadtree)->px, mheight, (*quadtree)->py);
+        QuadtreeNode * newnode3 = init_node(pixels, mwidth + 1, (*quadtree)->px, (*quadtree)->ny, mheight + 1);
+        QuadtreeNode * newnode4 = init_node(pixels, (*quadtree)->nx, mwidth, (*quadtree)->ny, mheight + 1);
+
+        (*quadtree)->data.child[0] = newnode1;
+        (*quadtree)->data.child[1] = newnode2;
+        (*quadtree)->data.child[2] = newnode3;
+        (*quadtree)->data.child[3] = newnode4;
+        (*quadtree)->state = BRANCH;
+    }
+    
+    
 }
 
 int is_similar_color(Pixel ** pixels, Pixel meancolor, QuadtreeNode quadtree) {
@@ -100,10 +105,12 @@ int is_similar_color(Pixel ** pixels, Pixel meancolor, QuadtreeNode quadtree) {
 void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     if(!is_similar_color(pixels, (*quadtree)->data.pixel, **quadtree)) {
         split_tree(pixels, quadtree);
-        image_detail(pixels, &(*quadtree)->data.child[0]);
-        image_detail(pixels, &(*quadtree)->data.child[1]);
-        image_detail(pixels, &(*quadtree)->data.child[2]);
-        image_detail(pixels, &(*quadtree)->data.child[3]);
+        if((*quadtree)->state == BRANCH) {
+            image_detail(pixels, &(*quadtree)->data.child[0]);
+            image_detail(pixels, &(*quadtree)->data.child[1]);
+            image_detail(pixels, &(*quadtree)->data.child[2]);
+            image_detail(pixels, &(*quadtree)->data.child[3]);
+        }
     }
 }
 
@@ -123,11 +130,15 @@ void deconstruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
             }
         }
     }
+    else if((*quadtree)->state == BRANCH) {
+        deconstruct_tree_helper(&(*quadtree)->data.child[0], pixels);
+        deconstruct_tree_helper(&(*quadtree)->data.child[1], pixels);
+        deconstruct_tree_helper(&(*quadtree)->data.child[2], pixels);
+        deconstruct_tree_helper(&(*quadtree)->data.child[3], pixels);
+    }
     else {
-        destruct_tree_helper(&(*quadtree)->data.child[0], pixels);
-        destruct_tree_helper(&(*quadtree)->data.child[1], pixels);
-        destruct_tree_helper(&(*quadtree)->data.child[2], pixels);
-        destruct_tree_helper(&(*quadtree)->data.child[3], pixels);
+        printf("\nError. Unrecognized TreeState.");
+        exit(1);
     }
 }
 
@@ -150,7 +161,7 @@ void release_quadtree_helper(QuadtreeNode ** quadtree){
     if((*quadtree)->state == LEAF) {
         return;
     }
-    else {
+    else if((*quadtree)->state == BRANCH) {
         release_quadtree_helper(&(*quadtree)->data.child[0]);
         free((*quadtree)->data.child[0]);
         release_quadtree_helper(&(*quadtree)->data.child[1]);
@@ -159,6 +170,10 @@ void release_quadtree_helper(QuadtreeNode ** quadtree){
         free((*quadtree)->data.child[2]);
         release_quadtree_helper(&(*quadtree)->data.child[3]);
         free((*quadtree)->data.child[3]);
+    }
+    else {
+        printf("\nError. Unrecognized TreeState.");
+        exit(1);
     }
 }
 
