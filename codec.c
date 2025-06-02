@@ -8,23 +8,24 @@ If TreeState is branch it means the next node is going down into a deeper level.
 #include <stdlib.h>
 #include "quadtree.h"
 #include "codec.h"
-
+#define ID_VAR_TYPE int
+#define ID_VAR_BIT_COUNT (sizeof(int) * 8)
 
 void encode_helper(FILE * file, QuadtreeNode ** quadtree) {
-    long long stateandid = 0;
-    stateandid = (unsigned long long)stateandid | (*quadtree)->id;
+    int stateandid = 0;
+    stateandid = (unsigned int)stateandid | (*quadtree)->id;
     if((*quadtree)->state == BRANCH) {
-        stateandid = stateandid | ((unsigned long long)1 << 63);
+        stateandid = stateandid | ((unsigned int)1 << (ID_VAR_BIT_COUNT - 1));
     }
     else {
-        stateandid = stateandid & ((unsigned long long)0 << 63);
+        stateandid = stateandid & ((unsigned int)0 << (ID_VAR_BIT_COUNT - 1));
     }
-    fwrite(&stateandid, sizeof(long long), 1, file);
+    fwrite(&stateandid, sizeof(int), 1, file);
     
-    fwrite(&(*quadtree)->nx, sizeof(long long), 1, file);
-    fwrite(&(*quadtree)->px, sizeof(long long), 1, file);
-    fwrite(&(*quadtree)->ny, sizeof(long long), 1, file);
-    fwrite(&(*quadtree)->py, sizeof(long long), 1, file);
+    fwrite(&(*quadtree)->nx, sizeof(unsigned short), 1, file);
+    fwrite(&(*quadtree)->px, sizeof(unsigned short), 1, file);
+    fwrite(&(*quadtree)->ny, sizeof(unsigned short), 1, file);
+    fwrite(&(*quadtree)->py, sizeof(unsigned short), 1, file);
 
     if((*quadtree)->state == LEAF) {
         fwrite(&(*quadtree)->data.pixel.R, sizeof(unsigned char), 1, file);
@@ -53,15 +54,15 @@ void encode(const char * filename, QuadtreeNode ** quadtree) {
 }
 
 void decode_helper(FILE * file, QuadtreeNode ** node) {
-    long long stateandid;
-    fread(&stateandid, sizeof(long long), 1, file);
-    (*node)->id = stateandid & ~((unsigned long long)1 << 63);
-    (*node)->state = ((unsigned long long)stateandid & ((unsigned long long)1 << 63)) >> 63;
+    int stateandid;
+    fread(&stateandid, sizeof(int), 1, file);
+    (*node)->id = stateandid & ~((unsigned int)1 << (ID_VAR_BIT_COUNT - 1));
+    (*node)->state = ((unsigned int)stateandid & ((unsigned int)1 << (ID_VAR_BIT_COUNT - 1))) >> (ID_VAR_BIT_COUNT - 1);
     
-    fread(&(*node)->nx, sizeof(long long), 1, file);
-    fread(&(*node)->px, sizeof(long long), 1, file);
-    fread(&(*node)->ny, sizeof(long long), 1, file);
-    fread(&(*node)->py, sizeof(long long), 1, file);
+    fread(&(*node)->nx, sizeof(unsigned short), 1, file);
+    fread(&(*node)->px, sizeof(unsigned short), 1, file);
+    fread(&(*node)->ny, sizeof(unsigned short), 1, file);
+    fread(&(*node)->py, sizeof(unsigned short), 1, file);
 
     if((*node)->state == LEAF) {
         fread(&(*node)->data.pixel.R, sizeof(unsigned char), 1, file);

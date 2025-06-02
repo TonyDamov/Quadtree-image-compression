@@ -6,11 +6,11 @@
 //Exagarated for the purpose of testing
 #define COLOR_DIFF_TRESHOLD 40
 
-long long NODECOUNTER = 0;
+int NODECOUNTER = 0;
 
 //Counting the pixels of the image from (left;top) = (0;0) to (right; bottom) = (width; height)
 
-QuadtreeNode * init_node(Pixel ** pixels, long long nx, long long px, long long ny, long long py) {
+QuadtreeNode * init_node(Pixel ** pixels, unsigned short nx, unsigned short px, unsigned short ny, unsigned short py) {
     QuadtreeNode * newnode = (QuadtreeNode*)malloc(sizeof(QuadtreeNode));
     ALLOC_ERROR(newnode)
     newnode->id = NODECOUNTER++;
@@ -24,10 +24,10 @@ QuadtreeNode * init_node(Pixel ** pixels, long long nx, long long px, long long 
     newnode->py = py;
     newnode->state = LEAF;
 
-    long long leafwidth = (newnode->px + 1) - newnode->nx;
-    long long leafheight = (newnode->ny + 1) - newnode->py;
+    int leafwidth = (newnode->px + 1) - newnode->nx;
+    int leafheight = (newnode->ny + 1) - newnode->py;
 
-    unsigned long long pixelcount = leafheight * leafwidth;
+    unsigned int pixelcount = leafheight * leafwidth;
 
     //find mean color
     unsigned long long pixelsumR = 0, pixelsumG = 0, pixelsumB = 0;
@@ -71,8 +71,8 @@ void split_tree(Pixel ** pixels , QuadtreeNode ** quadtree) {
     --------------------
     */
 
-    long long mwidth = floor(((*quadtree)->nx + (*quadtree)->px) / 2);
-    long long mheight = floor(((*quadtree)->ny + (*quadtree)->py) / 2);
+    unsigned short mwidth = floor(((*quadtree)->nx + (*quadtree)->px) / 2);
+    unsigned short mheight = floor(((*quadtree)->ny + (*quadtree)->py) / 2);
     if((*quadtree)->nx < (*quadtree)->px && (*quadtree)->py < (*quadtree)->ny) {
 
         //top left
@@ -116,7 +116,7 @@ void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree) {
     }
 }
 
-QuadtreeNode * construct_quadtree(Pixel ** pixels, long long width, long long height) {
+QuadtreeNode * construct_quadtree(Pixel ** pixels, unsigned short width, unsigned short height) {
     QuadtreeNode * quadtree = init_node(pixels, 0, width - 1, height - 1, 0);
     image_detail(pixels, &quadtree);
     return quadtree;
@@ -145,7 +145,7 @@ void deconstruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels) {
 }
 
 Pixel ** deconstruct_tree(QuadtreeNode ** quadtree) {
-    long long width = (*quadtree)->px + 1, height = (*quadtree)->ny + 1;
+    int width = (*quadtree)->px + 1, height = (*quadtree)->ny + 1;
     Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
     ALLOC_ERROR(pixels)
     for(int i = 0; i < height; i++) {

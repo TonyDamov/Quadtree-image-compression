@@ -23,7 +23,7 @@ typedef union treedata {
 } TreeData;
 
 typedef struct quadtreenode {
-    long long id;
+    int id;
     TreeState state;
     /*
     Indexes of children and quadrants
@@ -34,17 +34,17 @@ typedef struct quadtreenode {
     ---------
     */
     TreeData data;
-    long long nx;
-    long long px;
-    long long py;
-    long long ny;
+    unsigned short nx;
+    unsigned short px;
+    unsigned short py;
+    unsigned short ny;
 } QuadtreeNode;
 
-QuadtreeNode * init_node(Pixel ** pixels, long long nx, long long px, long long ny, long long py);
+QuadtreeNode * init_node(Pixel ** pixels, unsigned short nx, unsigned short px, unsigned short ny, unsigned short py);
 void split_tree(Pixel ** pixels , QuadtreeNode ** quadtree);
 int is_similar_color(Pixel ** pixels, Pixel meancolor, QuadtreeNode quadtree);
 void image_detail(Pixel ** pixels, QuadtreeNode ** quadtree);
-QuadtreeNode * construct_quadtree(Pixel ** pixels, long long width, long long height);
+QuadtreeNode * construct_quadtree(Pixel ** pixels, unsigned short width, unsigned short height);
 void deconstruct_tree_helper(QuadtreeNode ** quadtree, Pixel ** pixels);
 Pixel ** deconstruct_tree(QuadtreeNode ** quadtree);
 void release_quadtree_helper(QuadtreeNode ** quadtree);

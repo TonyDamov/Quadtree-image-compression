@@ -6,7 +6,7 @@
 
 // Working with .ppm files since its contents as easiest to read
 //.ppm saves the width and height of the image as a string which represents a number 
-long long read_num(FILE * image) {
+unsigned short read_num(FILE * image) {
     char buff[8];
     int i = 0;
     do {
@@ -17,21 +17,21 @@ long long read_num(FILE * image) {
     return strtoll(buff, NULL, 10);
 }
 
-long long image_width(const char * filename) {
+unsigned short image_width(const char * filename) {
     FILE * image = fopen(filename, "rb");
     FOPEN_ERROR(image)
     fseek(image, 3, SEEK_SET);
-    long long width = read_num(image);
+    unsigned short width = read_num(image);
     fclose(image);
     return width;
 }
 
-long long image_height(const char * filename) {
+unsigned short image_height(const char * filename) {
     FILE * image = fopen(filename, "rb");
     FOPEN_ERROR(image)
     fseek(image, 3, SEEK_SET);
-    long long width = read_num(image);
-    long long height = read_num(image);
+    unsigned short width = read_num(image);
+    unsigned short height = read_num(image);
     fclose(image);
     return height;
 }
@@ -48,9 +48,9 @@ Pixel ** import_image(const char * filename) {
     */
     //Skip the beginning of the ppm file which holds the tag P6
     fseek(image, 3, SEEK_SET);
-    long long width = read_num(image);
-    long long height = read_num(image);
-    long long maxval = read_num(image);
+    unsigned short width = read_num(image);
+    unsigned short height = read_num(image);
+    unsigned short maxval = read_num(image);
 
     Pixel ** pixels = (Pixel**)malloc(sizeof(Pixel*) * height);
     if(pixels == NULL) {
@@ -75,7 +75,7 @@ Pixel ** import_image(const char * filename) {
     return pixels;
 }
 
-void export_image(const char * filename, Pixel ** pixels, long long width, long long height) {
+void export_image(const char * filename, Pixel ** pixels, unsigned short width, unsigned short height) {
     FILE * image = fopen(filename, "wb");
     FOPEN_ERROR(image)
     fputs("P6\n", image);

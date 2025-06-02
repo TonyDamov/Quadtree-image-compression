@@ -17,10 +17,10 @@ typedef struct pixel {
     unsigned char B;
 } Pixel;
 
-long long read_num(FILE * image);
-long long image_width(const char * filename);
-long long image_height(const char * filename);
+unsigned short read_num(FILE * image);
+unsigned short image_width(const char * filename);
+unsigned short image_height(const char * filename);
 Pixel ** import_image(const char * filename);
-void export_image(const char * filename, Pixel ** pixels, long long width, long long height);
+void export_image(const char * filename, Pixel ** pixels, unsigned short width, unsigned short height);
 
 #endif
