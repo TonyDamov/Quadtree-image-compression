@@ -4,7 +4,7 @@
 #include "quadtree.h"
 
 //Exagarated for the purpose of testing
-#define COLOR_DIFF_TRESHOLD 40
+#define COLOR_DIFF_TRESHOLD 24
 
 int NODECOUNTER = 0;
 
