@@ -6,7 +6,7 @@
 #include "codec.h"
 
 void main() {
-    char name[96] = "nightcity"; // no extension
+    char name[96] = ""; // no extension
 
     char file[128];
     strcpy(file, name);
